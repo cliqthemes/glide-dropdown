@@ -1,12 +1,12 @@
 # Glide
 
 A tiny, dependency-free, accessible select/dropdown component for the web. A modern
-replacement for Select2: ~10.7 KB gzipped, virtualized to handle
+replacement for Select2: ~9.4 KB brotli (10.7 KB gzip), virtualized to handle
 20,000+ options smoothly, and built on plain ES modules — no jQuery, no framework.
 
 **[Live demo →](https://cliqthemes.github.io/glide-dropdown/)**
 
-- 🪶 **Tiny** — core is ~10.7 KB gzipped, zero runtime dependencies
+- 🪶 **Tiny** — core is ~9.4 KB brotli-compressed (10.7 KB gzip), zero runtime dependencies
 - ⚡ **Fast** — virtualized option list; renders a bounded DOM window regardless of dataset size
 - ♿ **Accessible** — full ARIA combobox pattern, keyboard-only operable, screen-reader announcements
 - 🎨 **Themeable** — every color/spacing value is a CSS variable; ships light + dark themes
