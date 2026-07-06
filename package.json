@@ -1,0 +1,63 @@
+{
+  "name": "@cliqthemes/glide-dropdown",
+  "version": "0.1.0",
+  "description": "A tiny, dependency-free, accessible select/dropdown component. A modern replacement for Select2 / Tom Select.",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cliqthemes/glide-dropdown.git"
+  },
+  "homepage": "https://github.com/cliqthemes/glide-dropdown#readme",
+  "bugs": {
+    "url": "https://github.com/cliqthemes/glide-dropdown/issues"
+  },
+  "author": "CliqThemes",
+  "main": "./dist/glide.umd.cjs",
+  "module": "./dist/glide.js",
+  "types": "./types/index.d.ts",
+  "unpkg": "./dist/glide.umd.cjs",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/glide.js",
+      "require": "./dist/glide.umd.cjs"
+    },
+    "./style.css": "./dist/glide.css",
+    "./plugins/*": {
+      "types": "./types/plugins/*.d.ts",
+      "import": "./dist/plugins/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/build-extra.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "select",
+    "dropdown",
+    "multiselect",
+    "combobox",
+    "autocomplete",
+    "select2",
+    "tom-select"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "vite": "^6.0.0",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,48 @@
+/*
+ * Dark theme values. Unlike a typical prefers-color-scheme setup, this does
+ * NOT apply automatically page-wide — Glide defaults every instance to
+ * `theme: 'light'`. Dark only kicks in per-instance, via:
+ *   - `theme: 'dark'`  -> always dark, matching [data-theme='dark'] below
+ *   - `theme: 'auto'`  -> follows the OS, matching [data-theme='auto'] below
+ * The attribute is set on both the control root and the (body-appended)
+ * dropdown panel, so both pick up the same variables independently.
+ */
+[data-theme='dark'] {
+  --glide-bg: #1c1e21;
+  --glide-border: #383c40;
+  --glide-border-focus: #a8bece;
+  --glide-color: #e8e8ea;
+  --glide-placeholder: #8e959c;
+  --glide-hover: #24303a;
+  --glide-active: #33465a;
+  --glide-active-color: #d7e4ec;
+  --glide-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --glide-focus-ring: 0 0 0 3px rgba(168, 190, 206, 0.22);
+  --glide-tag-bg: #263038;
+  --glide-tag-color: #e8e8ea;
+  --glide-highlight-bg: #5a4a12;
+  --glide-highlight-color: #ffe28a;
+  --glide-group-color: #8e959c;
+  --glide-scrollbar-color: #4a4f54 transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme='auto'] {
+    --glide-bg: #1c1e21;
+    --glide-border: #383c40;
+    --glide-border-focus: #a8bece;
+    --glide-color: #e8e8ea;
+    --glide-placeholder: #8e959c;
+    --glide-hover: #24303a;
+    --glide-active: #33465a;
+    --glide-active-color: #d7e4ec;
+    --glide-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --glide-focus-ring: 0 0 0 3px rgba(168, 190, 206, 0.22);
+    --glide-tag-bg: #263038;
+    --glide-tag-color: #e8e8ea;
+    --glide-highlight-bg: #5a4a12;
+    --glide-highlight-color: #ffe28a;
+    --glide-group-color: #8e959c;
+    --glide-scrollbar-color: #4a4f54 transparent;
+  }
+}

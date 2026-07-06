@@ -1,0 +1,17 @@
+export const defaultOptions = {
+  multiple: false,
+  disabled: false,
+  searchable: true,
+  theme: 'light',
+  fuzzy: false,
+  className: undefined,
+  placeholder: undefined,
+  options: undefined,
+  value: undefined,
+  load: undefined,
+  debounceMs: 200,
+  loadMoreThreshold: 80,
+  loadOnInit: true,
+  plugins: [],
+  templates: undefined,
+};

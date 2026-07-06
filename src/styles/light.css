@@ -1,0 +1,23 @@
+/*
+ * Explicit light theme values (same as the :root defaults in base.css).
+ * Applied when an instance is created with `theme: 'light'` (the default),
+ * or to force one instance light inside an otherwise-dark ancestor.
+ */
+[data-theme='light'] {
+  --glide-bg: #ffffff;
+  --glide-border: #d7d9dc;
+  --glide-border-focus: #93aabf;
+  --glide-color: #1c1c1f;
+  --glide-placeholder: #8e8e93;
+  --glide-hover: #f2f5f7;
+  --glide-active: #e2eaf0;
+  --glide-active-color: #4a6579;
+  --glide-shadow: 0 8px 24px rgba(20, 20, 23, 0.12);
+  --glide-focus-ring: 0 0 0 3px rgba(83, 108, 132, 0.16);
+  --glide-tag-bg: #eef2f4;
+  --glide-tag-color: #1c1c1f;
+  --glide-highlight-bg: #fff3ac;
+  --glide-highlight-color: inherit;
+  --glide-group-color: #8e8e93;
+  --glide-scrollbar-color: #c7c7cc transparent;
+}

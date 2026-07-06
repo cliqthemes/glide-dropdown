@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glide — examples</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/index.css" />
+  <style>
+    body {
+      font-family: 'Work Sans', sans-serif;
+      max-width: 820px;
+      margin: 40px auto;
+      padding: 0 20px 80px;
+      color: #1c1c1f;
+    }
+    h1 { font-weight: 100; text-transform: uppercase; letter-spacing: 0.04em; }
+    h2 { margin-top: 56px; padding-top: 12px; border-top: 1px solid #ececee; font-weight: 300; }
+    h4 { margin: 0 0 8px; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; color: #6b6b70; }
+    p.hint { font-size: 13px; color: #6b6b70; margin: 4px 0 12px; }
+    .field { margin: 20px 0; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+    pre { background: #f4f4f5; padding: 8px 12px; border-radius: 4px; font-size: 12px; overflow-x: auto; font-family: ui-monospace, monospace; }
+    .avatar { width: 24px; height: 24px; border-radius: 50%; margin-right: 10px; vertical-align: -7px; }
+    .person-name { font-weight: 500; }
+    .person-role { color: #8e8e93; font-size: 0.85em; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    button.action {
+      font: inherit;
+      font-size: 12.5px;
+      padding: 6px 10px;
+      border: 1px solid #d7d7db;
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: ui-monospace, monospace;
+    }
+    button.action:hover { background: #f2f2f3; }
+    button.action.danger { border-color: #e5b4b4; color: #b42318; }
+    .playground-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .playground-grid pre { height: 220px; overflow-y: auto; margin: 0; }
+    .constrained { max-width: 280px; }
+
+    .snippet-wrap { position: relative; margin-top: 10px; }
+    .snippet-wrap pre.snippet {
+      margin: 0;
+      background: #16171a;
+      color: #e4e4e7;
+      padding: 12px 44px 12px 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .snippet-wrap .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font: inherit;
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+      padding: 4px 8px;
+      border: 1px solid #3f3f46;
+      background: #26272b;
+      color: #d4d4d8;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .snippet-wrap .copy-btn:hover { background: #313236; }
+    .snippet-wrap .copy-btn.copied { border-color: #4a6579; color: #93aabf; }
+  </style>
+</head>
+<body>
+  <h1>Glide dropdown — examples</h1>
+
+  <h2>1. Single select (native &lt;select&gt; upgrade)</h2>
+  <div class="field" id="field-country">
+    <label for="country">Country</label>
+    <select id="country">
+      <option value="">Choose a country</option>
+      <option value="au">Australia</option>
+      <option value="nz">New Zealand</option>
+      <option value="us" disabled>United States (disabled)</option>
+      <option value="uk">United Kingdom</option>
+      <option value="fr">France</option>
+      <option value="de">Germany</option>
+    </select>
+    <pre id="country-out">value: null</pre>
+  </div>
+
+  <h2>2. Multi select with tags + clear button + fuzzy search</h2>
+  <div class="field" id="field-skills">
+    <label for="skills">Skills</label>
+    <select id="skills" multiple>
+      <option value="js">JavaScript</option>
+      <option value="ts">TypeScript</option>
+      <option value="py">Python</option>
+      <option value="go">Go</option>
+      <option value="rs">Rust</option>
+      <option value="rb">Ruby</option>
+    </select>
+    <pre id="skills-out">value: []</pre>
+  </div>
+
+  <h2>2b. Multi select as checkboxes (<code>checkboxSelection()</code>)</h2>
+  <div class="field" id="field-skills-checkbox">
+    <label for="skills-checkbox">Skills (checkbox style)</label>
+    <select id="skills-checkbox" multiple>
+      <option value="js">JavaScript</option>
+      <option value="ts">TypeScript</option>
+      <option value="py">Python</option>
+      <option value="go">Go</option>
+      <option value="rs">Rust</option>
+      <option value="rb">Ruby</option>
+    </select>
+    <p class="hint">Same tag-based multi-select, just with checkbox indicators instead of relying on row highlight alone — no groups needed.</p>
+  </div>
+
+  <h2>3. Groups (optgroups) with checkboxes + group-select</h2>
+  <div class="field" id="field-grouped">
+    <label for="grouped">Team members</label>
+    <select id="grouped" multiple>
+      <optgroup label="Engineering">
+        <option value="alice">Alice</option>
+        <option value="bob">Bob</option>
+        <option value="carol" disabled>Carol (on leave)</option>
+      </optgroup>
+      <optgroup label="Design">
+        <option value="dave">Dave</option>
+        <option value="erin">Erin</option>
+      </optgroup>
+    </select>
+  </div>
+
+  <h2>4. Creatable tags</h2>
+  <div class="field" id="field-tags">
+    <label for="tags">Add labels</label>
+    <select id="tags" multiple></select>
+    <p class="hint">Type text that doesn't match anything, then press Enter to create it.</p>
+  </div>
+
+  <h2>4b. Search disabled (<code>searchable: false</code>)</h2>
+  <div class="field" id="field-nosearch">
+    <label for="nosearch">Status</label>
+    <select id="nosearch">
+      <option value="draft">Draft</option>
+      <option value="review">In review</option>
+      <option value="approved">Approved</option>
+      <option value="published">Published</option>
+      <option value="archived">Archived</option>
+    </select>
+    <p class="hint">No search box — click to browse, or start typing a letter to jump to a match (native-&lt;select&gt;-style typeahead).</p>
+  </div>
+
+  <h2>5a. Custom rendering — badges, safe against XSS by default</h2>
+  <div class="field" id="field-users">
+    <label for="users">Assignee</label>
+    <div id="users"></div>
+    <p class="hint">The third entry's label is a literal <code>&lt;img onerror=...&gt;</code> string — it renders as inert text, not markup.</p>
+  </div>
+
+  <h2>5b. Custom rendering — profile selector with avatars</h2>
+  <div class="field" id="field-profile">
+    <label for="profile">Reviewer</label>
+    <select id="profile"></select>
+    <p class="hint">Avatars are generated inline (SVG data URIs) so this demo has no network dependency — swap in real image URLs the same way.</p>
+  </div>
+
+  <h2>6. Async loading + infinite scroll + error handling</h2>
+  <div class="field" id="field-async">
+    <label for="async">Search 5,000 remote records</label>
+    <div id="async"></div>
+    <p class="hint">Type "fail" to simulate a rejected request and see the <code>error</code> event. Debounced 350ms, pages of 40, loads more near the bottom.</p>
+  </div>
+
+  <h2>7. Virtual scrolling stress test — 20,000 options</h2>
+  <div class="field" id="field-huge">
+    <label for="huge">Pick one of 20,000</label>
+    <select id="huge"></select>
+  </div>
+
+  <h2>8. Width constraint (<code>className</code> / <code>--glide-max-width</code>)</h2>
+  <div class="field" id="field-narrow">
+    <label for="narrow">Priority</label>
+    <select id="narrow">
+      <option value="low">Low</option>
+      <option value="med">Medium</option>
+      <option value="high">High</option>
+    </select>
+  </div>
+
+  <h2>9. API &amp; events playground</h2>
+  <div class="field" id="field-playground">
+    <label for="playground">Assignee</label>
+    <select id="playground">
+      <optgroup label="Engineering">
+        <option value="alice">Alice</option>
+        <option value="bob">Bob</option>
+      </optgroup>
+      <optgroup label="Design">
+        <option value="carol">Carol</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="btn-row" id="playground-buttons"></div>
+  <div class="playground-grid">
+    <div>
+      <h4>Event log</h4>
+      <pre id="playground-log"></pre>
+    </div>
+    <div>
+      <h4>getState() / getValue()</h4>
+      <pre id="playground-state"></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Glide } from '/src/index.js';
+    import { clearButton, checkboxSelection, groupSelect, tagCreate } from '/src/plugins/index.js';
+
+    function escapeForDemo(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    // ---- 1. Single select ----
+    const country = new Glide('#country');
+    country.on('change', ({ value }) => {
+      document.getElementById('country-out').textContent = `value: ${JSON.stringify(value)}`;
+    });
+
+    // ---- 2. Multi select, fuzzy search, clear button ----
+    const skills = new Glide('#skills', { fuzzy: true, plugins: [clearButton()] });
+    skills.on('change', ({ value }) => {
+      document.getElementById('skills-out').textContent = `value: ${JSON.stringify(value)}`;
+    });
+
+    // ---- 2b. Multi select as checkboxes ----
+    new Glide('#skills-checkbox', { fuzzy: true, plugins: [checkboxSelection(), clearButton()] });
+
+    // ---- 3. Groups with checkboxes + per-group select-all ----
+    new Glide('#grouped', { plugins: [checkboxSelection(), groupSelect(), clearButton()] });
+
+    // ---- 4. Creatable ----
+    new Glide('#tags', {
+      placeholder: 'Type and press Enter…',
+      plugins: [tagCreate(), clearButton()],
+    });
+
+    // ---- 4b. Search disabled ----
+    new Glide('#nosearch', { searchable: false });
+
+    // ---- 5a. Custom render with badge + description, HTML-escaped by default ----
+    const people = [
+      { value: 1, label: 'Grace Hopper', role: 'Rear Admiral', color: '#71717a' },
+      { value: 2, label: 'Ada Lovelace', role: 'Mathematician', color: '#52525b' },
+      { value: 3, label: '<img src=x onerror=alert(1)>', role: 'XSS attempt — must render as text', color: '#a1a1aa' },
+    ];
+    new Glide('#users', {
+      options: people,
+      placeholder: 'Assign to…',
+      templates: {
+        option(item) {
+          return (
+            `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${item.data.color};margin-right:8px;vertical-align:1px"></span>` +
+            `<span>${escapeForDemo(item.label)}</span> <span style="color:#8e8e93">— ${escapeForDemo(item.data.role)}</span>`
+          );
+        },
+      },
+    });
+
+    // ---- 5b. Profile selector with generated avatar images ----
+    function initials(name) {
+      return name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase();
+    }
+    function avatarDataUri(name, bg) {
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">` +
+        `<rect width="32" height="32" rx="16" fill="${bg}"/>` +
+        `<text x="16" y="21" font-family="Work Sans, sans-serif" font-size="13" fill="#fff" text-anchor="middle" font-weight="600">${initials(name)}</text>` +
+        `</svg>`;
+      return `data:image/svg+xml;base64,${btoa(svg)}`;
+    }
+    const reviewers = [
+      { value: 'p1', label: 'Priya Sharma', title: 'Staff Engineer', color: '#52525b' },
+      { value: 'p2', label: 'Marcus Chen', title: 'Engineering Manager', color: '#71717a' },
+      { value: 'p3', label: 'Layla Haddad', title: 'Product Designer', color: '#3f3f46' },
+      { value: 'p4', label: 'Tom Fletcher', title: 'Backend Engineer', color: '#8e8e93' },
+    ];
+    new Glide('#profile', {
+      options: reviewers.map((r) => ({ value: r.value, label: r.label, title: r.title, color: r.color })),
+      placeholder: 'Choose a reviewer…',
+      templates: {
+        option(item) {
+          const avatar = avatarDataUri(item.label, item.data.color);
+          return (
+            `<img class="avatar" src="${avatar}" alt="">` +
+            `<span class="person-name">${escapeForDemo(item.label)}</span> ` +
+            `<span class="person-role">${escapeForDemo(item.data.title)}</span>`
+          );
+        },
+        value(item) {
+          const avatar = avatarDataUri(item.label, item.data.color);
+          return `<img class="avatar" src="${avatar}" alt="">${escapeForDemo(item.label)}`;
+        },
+      },
+    });
+
+    // ---- 6. Async loading with debounce + infinite scroll + race-guard + errors ----
+    const DB = Array.from({ length: 5000 }, (_, i) => ({ value: i, label: `Record #${i.toString().padStart(5, '0')}` }));
+    const PAGE_SIZE = 40;
+    const asyncSelect = new Glide('#async', {
+      placeholder: 'Type to search remote records…',
+      debounceMs: 350,
+      loadMoreThreshold: 60,
+      loadOnInit: true,
+      load(query, { page }) {
+        return new Promise((resolveFn, rejectFn) => {
+          setTimeout(() => {
+            if (query.toLowerCase() === 'fail') {
+              rejectFn(new Error('Simulated server error'));
+              return;
+            }
+            const filtered = query ? DB.filter((r) => r.label.toLowerCase().includes(query.toLowerCase())) : DB;
+            const start = (page - 1) * PAGE_SIZE;
+            const slice = filtered.slice(start, start + PAGE_SIZE);
+            resolveFn({ items: slice, hasMore: start + PAGE_SIZE < filtered.length });
+          }, 300 + Math.random() * 200); // simulate latency + jitter to exercise the race-guard
+        });
+      },
+    });
+    asyncSelect.on('error', ({ error }) => {
+      console.warn('Glide async load error:', error.message);
+    });
+
+    // ---- 7. Virtual scrolling stress test ----
+    const huge = document.getElementById('huge');
+    huge.appendChild(new Option('Choose one…', ''));
+    for (let i = 0; i < 20000; i += 1) {
+      huge.appendChild(new Option(`Option number ${i}`, String(i)));
+    }
+    new Glide(huge, { fuzzy: true });
+
+    // ---- 8. Width constraint ----
+    new Glide('#narrow', { className: 'constrained' });
+
+    // ---- 9. API & events playground ----
+    const EVENTS = ['open', 'close', 'change', 'search', 'clear', 'create', 'select', 'deselect', 'error', 'destroy'];
+    const logEl = document.getElementById('playground-log');
+    const stateEl = document.getElementById('playground-state');
+    const buttonsEl = document.getElementById('playground-buttons');
+
+    function log(line) {
+      const time = new Date().toISOString().slice(11, 19);
+      logEl.textContent += `[${time}] ${line}\n`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    let pg = null;
+
+    function renderState() {
+      if (!pg) {
+        stateEl.textContent = '(destroyed)';
+        return;
+      }
+      stateEl.textContent = JSON.stringify(
+        {
+          value: pg.getValue(),
+          open: pg.getState().open,
+          disabled: pg.getState().disabled,
+          optionCount: pg.getOptions().length,
+        },
+        null,
+        2,
+      );
+    }
+
+    const ACTIONS = [
+      ['open()', (p) => p.open()],
+      ['close()', (p) => p.close()],
+      ['toggle()', (p) => p.toggle()],
+      ['enable()', (p) => p.enable()],
+      ['disable()', (p) => p.disable()],
+      ['focus()', (p) => p.focus()],
+      ['blur()', (p) => p.blur()],
+      ["select('bob')", (p) => p.select('bob')],
+      ["deselect('bob')", (p) => p.deselect('bob')],
+      ["setValue('carol')", (p) => p.setValue('carol')],
+      ['getValue()', (p) => log(`getValue() -> ${JSON.stringify(p.getValue())}`)],
+      ["addOption({value:'zed',label:'Zed'})", (p) => p.addOption({ value: 'zed', label: 'Zed' })],
+      ["removeOption('zed')", (p) => p.removeOption('zed')],
+      ['getOptions()', (p) => log(`getOptions() -> ${p.getOptions().map((o) => o.label).join(', ')}`)],
+      ['getGroups()', (p) => log(`getGroups() -> ${p.getGroups().map((g) => g.label).join(', ')}`)],
+      ['clear()', (p) => p.clear()],
+      ['refresh()', (p) => p.refresh()],
+      ["setTheme('dark')", (p) => p.setTheme('dark')],
+      ["setTheme('auto')", (p) => p.setTheme('auto')],
+      ["setTheme('light')", (p) => p.setTheme('light')],
+      ["setOptions([...])", (p) => p.setOptions([{ value: 'x', label: 'Xavier' }, { value: 'y', label: 'Yara' }])],
+    ];
+
+    function createPlayground() {
+      pg = new Glide('#playground', { theme: 'light', plugins: [clearButton()] });
+      for (const event of EVENTS) {
+        pg.on(event, (payload) => {
+          log(`event: ${event}${payload !== undefined ? ' ' + JSON.stringify(payload) : ''}`);
+          renderState();
+        });
+      }
+      renderState();
+    }
+
+    for (const [labelText, fn] of ACTIONS) {
+      const btn = document.createElement('button');
+      btn.className = 'action';
+      btn.textContent = labelText;
+      btn.addEventListener('click', () => {
+        if (!pg) return log('(destroyed — click Recreate first)');
+        fn(pg);
+        renderState();
+      });
+      buttonsEl.appendChild(btn);
+    }
+    const destroyBtn = document.createElement('button');
+    destroyBtn.className = 'action danger';
+    destroyBtn.textContent = 'destroy()';
+    destroyBtn.addEventListener('click', () => {
+      if (!pg) return;
+      pg.destroy();
+      pg = null;
+      log('destroyed — click "Recreate" to rebuild');
+      renderState();
+    });
+    buttonsEl.appendChild(destroyBtn);
+    const recreateBtn = document.createElement('button');
+    recreateBtn.className = 'action';
+    recreateBtn.textContent = 'Recreate';
+    recreateBtn.addEventListener('click', () => createPlayground());
+    buttonsEl.appendChild(recreateBtn);
+
+    createPlayground();
+
+    // ---- Copy-paste snippets, one per section above ----
+    const SNIPPETS = {
+      'field-country': `
+import { Glide } from 'glide-dropdown';
+
+const country = new Glide('#country');
+country.on('change', ({ value }) => console.log(value));`.trim(),
+
+      'field-skills': `
+import { Glide } from 'glide-dropdown';
+import { clearButton } from 'glide-dropdown/plugins/clearButton';
+
+new Glide('#skills', { fuzzy: true, plugins: [clearButton()] });`.trim(),
+
+      'field-skills-checkbox': `
+import { checkboxSelection } from 'glide-dropdown/plugins/checkboxSelection';
+import { clearButton } from 'glide-dropdown/plugins/clearButton';
+
+new Glide('#skills-checkbox', {
+  fuzzy: true,
+  plugins: [checkboxSelection(), clearButton()],
+});`.trim(),
+
+      'field-grouped': `
+import { checkboxSelection } from 'glide-dropdown/plugins/checkboxSelection';
+import { groupSelect } from 'glide-dropdown/plugins/groupSelect';
+import { clearButton } from 'glide-dropdown/plugins/clearButton';
+
+new Glide('#grouped', {
+  plugins: [checkboxSelection(), groupSelect(), clearButton()],
+});`.trim(),
+
+      'field-tags': `
+import { tagCreate } from 'glide-dropdown/plugins/tagCreate';
+import { clearButton } from 'glide-dropdown/plugins/clearButton';
+
+new Glide('#tags', {
+  placeholder: 'Type and press Enter…',
+  plugins: [tagCreate(), clearButton()],
+});`.trim(),
+
+      'field-nosearch': `
+new Glide('#nosearch', { searchable: false });`.trim(),
+
+      'field-users': `
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
+const people = [
+  { value: 1, label: 'Grace Hopper', role: 'Rear Admiral' },
+  { value: 2, label: 'Ada Lovelace', role: 'Mathematician' },
+];
+
+new Glide('#users', {
+  options: people,
+  placeholder: 'Assign to…',
+  templates: {
+    // Custom templates are inserted as raw HTML — the default template
+    // escapes for you, but here it's on you to escape anything you
+    // interpolate yourself, e.g. via escapeHtml() above.
+    option(item) {
+      return \`<span>\${escapeHtml(item.label)}</span> — \` +
+        \`<span style="color:#8e8e93">\${escapeHtml(item.data.role)}</span>\`;
+    },
+  },
+});`.trim(),
+
+      'field-profile': `
+function initials(name) {
+  return name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase();
+}
+function avatarDataUri(name, bg) {
+  const svg = \`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+    <rect width="32" height="32" rx="16" fill="\${bg}"/>
+    <text x="16" y="21" font-size="13" fill="#fff" text-anchor="middle" font-weight="600">\${initials(name)}</text>
+  </svg>\`;
+  return \`data:image/svg+xml;base64,\${btoa(svg)}\`;
+}
+// In a real app, swap avatarDataUri(...) for item.data.photoUrl instead.
+
+new Glide('#profile', {
+  options: [
+    { value: 'p1', label: 'Priya Sharma', title: 'Staff Engineer', color: '#52525b' },
+  ],
+  placeholder: 'Choose a reviewer…',
+  templates: {
+    option(item) {
+      const avatar = avatarDataUri(item.label, item.data.color);
+      return \`<img class="avatar" src="\${avatar}"> \${item.label} — \${item.data.title}\`;
+    },
+  },
+});`.trim(),
+
+      'field-async': `
+new Glide('#async', {
+  placeholder: 'Type to search remote records…',
+  debounceMs: 350,
+  loadMoreThreshold: 60,
+  async load(query, { page }) {
+    const res = await fetch(\`/api/records?q=\${query}&page=\${page}\`);
+    const { items, hasMore } = await res.json();
+    return { items, hasMore };
+  },
+});`.trim(),
+
+      'field-huge': `
+// Works the same for 20 or 20,000 <option>s — only the visible
+// rows are ever mounted in the DOM.
+new Glide('#huge', { fuzzy: true });`.trim(),
+
+      'field-narrow': `
+new Glide('#narrow', { className: 'constrained' });`.trim() +
+        '\n\n/* in your CSS */\n.constrained { max-width: 280px; }',
+
+      'field-playground': `
+const select = new Glide('#playground', { plugins: [clearButton()] });
+
+const EVENTS = ['open', 'close', 'change', 'search', 'clear', 'create', 'select', 'deselect', 'error', 'destroy'];
+for (const event of EVENTS) {
+  select.on(event, (payload) => console.log(event, payload));
+}
+
+select.open();
+select.select('bob');
+select.getValue();
+select.setValue('carol');
+select.clear();
+select.destroy();`.trim(),
+    };
+
+    for (const [fieldId, code] of Object.entries(SNIPPETS)) {
+      const field = document.getElementById(fieldId);
+      if (!field) continue;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'snippet-wrap';
+
+      const pre = document.createElement('pre');
+      pre.className = 'snippet';
+      const codeEl = document.createElement('code');
+      codeEl.textContent = code;
+      pre.appendChild(codeEl);
+
+      const copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'copy-btn';
+      copyBtn.textContent = 'Copy';
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code);
+          copyBtn.textContent = 'Copied!';
+          copyBtn.classList.add('copied');
+        } catch {
+          copyBtn.textContent = 'Select & copy manually';
+        }
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy';
+          copyBtn.classList.remove('copied');
+        }, 1400);
+      });
+
+      wrap.appendChild(pre);
+      wrap.appendChild(copyBtn);
+      field.appendChild(wrap);
+    }
+  </script>
+</body>
+</html>
