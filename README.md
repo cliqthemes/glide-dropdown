@@ -177,6 +177,9 @@ new Glide(el, {
 | `fuzzy` | `boolean` | `false` | Enable subsequence fuzzy matching once exact/startsWith/contains all miss |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | `'auto'` follows `prefers-color-scheme`; dark never applies unless requested |
 | `className` | `string` | — | Extra class(es) on the root element, for scoping instance-specific CSS |
+| `controlClassName` | `string` | — | Extra class(es) on the control element — an official hook that survives internal re-renders |
+| `dropdownClassName` | `string` | — | Extra class(es) on the dropdown panel. The panel is portaled to `<body>` by default, so instance-scoped CSS can only reach it through this |
+| `portal` | `boolean \| Element` | `true` | Panel container: `true` portals to `<body>` (escapes overflow/stacking contexts); `false` keeps it inside the root (scoped CSS, focus traps, shadow DOM); an `Element` portals it there |
 | `placeholder` | `string` | derived from an empty leading `<option>`, else `''` | Placeholder text |
 | `options` | `Array` | — | Flat or grouped data (ignored for a native `<select>`) |
 | `value` | value \| value[] | — | Initial selection |
@@ -274,7 +277,10 @@ Full variable list: `--glide-bg`, `--glide-border`, `--glide-border-focus`,
 `--glide-radius`, `--glide-color`, `--glide-placeholder`, `--glide-hover`,
 `--glide-active`, `--glide-active-color`, `--glide-shadow`, `--glide-tag-bg`,
 `--glide-tag-color`, `--glide-highlight-bg`, `--glide-highlight-color`,
-`--glide-group-color`, `--glide-control-min-height`, `--glide-font-size`.
+`--glide-group-color`, `--glide-control-min-height`, `--glide-font-size`,
+`--glide-scrollbar-thumb`, `--glide-scrollbar-track` (WebKit + `scrollbar-color`,
+both driven by the same pair), `--glide-panel-max-h` (caps the option list's
+height below the default 280px; the available-viewport clamp still applies).
 
 Animations are CSS-only (a subtle fade/scale on open) and respect
 `prefers-reduced-motion`.

@@ -79,6 +79,12 @@ export interface GlideOptions {
   fuzzy?: boolean;
   theme?: GlideTheme;
   className?: string;
+  /** Extra class(es) on the control element — an official hook that survives internal re-renders. */
+  controlClassName?: string;
+  /** Extra class(es) on the dropdown panel — required for instance-scoped CSS to reach the panel, which is portaled to <body> by default. */
+  dropdownClassName?: string;
+  /** Panel container: true (default) portals to <body>; false keeps it inside the root (scoped CSS / focus traps / shadow DOM); an Element portals it there. */
+  portal?: boolean | Element;
   placeholder?: string;
   options?: GlideData;
   value?: OptionValue | OptionValue[] | null;

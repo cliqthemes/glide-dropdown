@@ -65,16 +65,19 @@ export class Glide {
       theme: this.options.theme,
       templates: this.templates,
       ids: this.ids,
+      portal: this.options.portal,
       onHoverItem: (id) => this.setActive(id),
       onSelectItem: (id) => this._handleRowClick(id),
       onToggleGroup: (groupId) => this.toggleGroup(groupId),
     });
     this.renderer.mount();
-    if (this.options.className) {
-      for (const cls of this.options.className.split(/\s+/).filter(Boolean)) {
-        this.renderer.root.classList.add(cls);
-      }
-    }
+    const addClasses = (el, classNames) => {
+      if (!el || !classNames) return;
+      for (const cls of classNames.split(/\s+/).filter(Boolean)) el.classList.add(cls);
+    };
+    addClasses(this.renderer.root, this.options.className);
+    addClasses(this.renderer.control, this.options.controlClassName);
+    addClasses(this.renderer.dropdown, this.options.dropdownClassName);
 
     this.dom = {
       root: this.renderer.root,
@@ -472,10 +475,24 @@ export class Glide {
   // -------------------------------------------------------------- data
 
   setCollections(items, groups, { preserveSelection = true } = {}) {
+    // Selection is preserved by VALUE, not by internal item id — normalize
+    // assigns fresh ids on every pass, so replacing the collections with
+    // identical data (the idiomatic setOptions() call from a reactive
+    // framework re-render) would otherwise silently wipe the selection.
+    const prevValues = preserveSelection
+      ? this.store
+          .get('selected')
+          .map((id) => this.store.getItem(id)?.value)
+          .filter((value) => value !== undefined)
+      : [];
     this.store.setCollections(items, groups);
     if (!preserveSelection) return;
-    const validIds = this.store.get('selected').filter((id) => this.store.getItem(id));
-    if (validIds.length !== this.store.get('selected').length) this._setSelectedIds(validIds, { silent: true });
+    const nextIds = [];
+    for (const value of prevValues) {
+      const match = this.store.findItemByValue(value);
+      if (match && !nextIds.includes(match.id)) nextIds.push(match.id);
+    }
+    this._setSelectedIds(nextIds, { silent: true });
   }
 
   setOptions(rawList) {

@@ -12,10 +12,11 @@ const DEFAULT_MAX_HEIGHT = 280;
  * to ListRenderer and control rendering to ControlRenderer.
  */
 export class Renderer {
-  constructor({ anchor, multiple, searchable, placeholder, theme, templates, ids, onHoverItem, onSelectItem, onToggleGroup }) {
+  constructor({ anchor, multiple, searchable, placeholder, theme, templates, ids, portal = true, onHoverItem, onSelectItem, onToggleGroup }) {
     this.anchor = anchor;
     this.ids = ids;
     this.theme = theme;
+    this.portal = portal;
 
     this.controlRenderer = new ControlRenderer({
       multiple,
@@ -63,7 +64,17 @@ export class Renderer {
 
   mount() {
     this.anchor.after(this.root);
-    document.body.appendChild(this.dropdown);
+    // Where the panel lives (see the `portal` option): <body> by default to
+    // escape overflow/stacking contexts; inside the root for scoped CSS /
+    // focus traps / shadow DOM; or any custom container element. Positioning
+    // is viewport-fixed either way.
+    if (this.portal === false) {
+      this.root.appendChild(this.dropdown);
+    } else if (this.portal && this.portal !== true && typeof this.portal.appendChild === 'function') {
+      this.portal.appendChild(this.dropdown);
+    } else {
+      document.body.appendChild(this.dropdown);
+    }
   }
 
   get input() {
@@ -152,7 +163,11 @@ export class Renderer {
 
   _position() {
     const rect = this.control.getBoundingClientRect();
-    const maxHeight = DEFAULT_MAX_HEIGHT;
+    // Theme-level cap: --glide-panel-max-h (a px length on the dropdown, via
+    // its theme/instance classes) lowers the default 280px ceiling — the
+    // available-viewport-space clamp below still applies on top of it.
+    const varCap = parseFloat(getComputedStyle(this.dropdown).getPropertyValue('--glide-panel-max-h'));
+    const maxHeight = Number.isFinite(varCap) && varCap > 0 ? varCap : DEFAULT_MAX_HEIGHT;
     const spaceBelow = window.innerHeight - rect.bottom;
     const spaceAbove = rect.top;
     const openUpward = spaceBelow < maxHeight && spaceAbove > spaceBelow;

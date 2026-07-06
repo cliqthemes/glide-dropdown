@@ -18,7 +18,8 @@
   --glide-highlight-bg: #fff3ac;
   --glide-highlight-color: inherit;
   --glide-group-color: #8e8e93;
-  --glide-scrollbar-color: #c7c7cc transparent;
+  --glide-scrollbar-thumb: #c7c7cc;
+  --glide-scrollbar-track: transparent;
   --glide-z-index: 1000;
   --glide-max-width: none;
 }
@@ -266,8 +267,23 @@
 .glide-viewport {
   overflow-y: auto;
   overscroll-behavior: contain;
-  scrollbar-color: var(--glide-scrollbar-color);
+  /* Firefox / Chromium 121+. */
+  scrollbar-color: var(--glide-scrollbar-thumb) var(--glide-scrollbar-track);
   -webkit-overflow-scrolling: touch;
+}
+
+/* WebKit fallback (Safari ignores scrollbar-color) — same two variables. */
+.glide-viewport::-webkit-scrollbar {
+  width: 10px;
+}
+.glide-viewport::-webkit-scrollbar-track {
+  background: var(--glide-scrollbar-track);
+}
+.glide-viewport::-webkit-scrollbar-thumb {
+  background: var(--glide-scrollbar-thumb);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .glide-content {

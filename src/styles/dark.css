@@ -23,7 +23,8 @@
   --glide-highlight-bg: #5a4a12;
   --glide-highlight-color: #ffe28a;
   --glide-group-color: #8e959c;
-  --glide-scrollbar-color: #4a4f54 transparent;
+  --glide-scrollbar-thumb: #4a4f54;
+  --glide-scrollbar-track: transparent;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,6 +44,7 @@
     --glide-highlight-bg: #5a4a12;
     --glide-highlight-color: #ffe28a;
     --glide-group-color: #8e959c;
-    --glide-scrollbar-color: #4a4f54 transparent;
+    --glide-scrollbar-thumb: #4a4f54;
+  --glide-scrollbar-track: transparent;
   }
 }

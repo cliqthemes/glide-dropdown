@@ -19,5 +19,6 @@
   --glide-highlight-bg: #fff3ac;
   --glide-highlight-color: inherit;
   --glide-group-color: #8e8e93;
-  --glide-scrollbar-color: #c7c7cc transparent;
+  --glide-scrollbar-thumb: #c7c7cc;
+  --glide-scrollbar-track: transparent;
 }

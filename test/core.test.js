@@ -222,3 +222,94 @@ describe('Glide: addOption / removeOption / setOptions', () => {
     expect(instance.getOptions().map((i) => i.value)).toEqual(['x']);
   });
 });
+
+describe('Glide: 0.2.0 — setOptions preserves selection by value', () => {
+  beforeEach(() => {
+    select = mountSelect('<select></select>');
+    instance = new Glide(select, {
+      options: [
+        { value: 'a', label: 'Alpha' },
+        { value: 'b', label: 'Beta' },
+      ],
+    });
+  });
+
+  it('keeps the current selection when setOptions() is called with identical data', () => {
+    instance.select(instance.findOption('b').id);
+    expect(instance.getValue()).toBe('b');
+
+    // Fresh array, fresh internal ids — the idiomatic reactive re-render call.
+    instance.setOptions([
+      { value: 'a', label: 'Alpha' },
+      { value: 'b', label: 'Beta' },
+    ]);
+
+    expect(instance.getValue()).toBe('b');
+  });
+
+  it('keeps the selection when the list grows around it', () => {
+    instance.select(instance.findOption('a').id);
+    instance.setOptions([
+      { value: 'z', label: 'Zeta' },
+      { value: 'a', label: 'Alpha' },
+      { value: 'b', label: 'Beta' },
+    ]);
+    expect(instance.getValue()).toBe('a');
+  });
+
+  it('drops the selection when its value is no longer in the list', () => {
+    instance.select(instance.findOption('a').id);
+    instance.setOptions([{ value: 'b', label: 'Beta' }]);
+    expect(instance.getValue()).toBe(null);
+  });
+
+  it('does not emit change while preserving', () => {
+    instance.select(instance.findOption('a').id);
+    const onChange = vi.fn();
+    instance.on('change', onChange);
+    instance.setOptions([
+      { value: 'a', label: 'Alpha' },
+      { value: 'b', label: 'Beta' },
+    ]);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+describe('Glide: 0.2.0 — control/dropdown class options + portal', () => {
+  beforeEach(() => {
+    select = mountSelect('<select><option value="a">Alpha</option></select>');
+  });
+
+  it('controlClassName / dropdownClassName land on their elements', () => {
+    instance = new Glide(select, {
+      className: 'my-root',
+      controlClassName: 'my-control hook-1',
+      dropdownClassName: 'my-panel hook-1',
+    });
+    expect(instance.dom.root.classList.contains('my-root')).toBe(true);
+    expect(instance.dom.control.classList.contains('my-control')).toBe(true);
+    expect(instance.dom.control.classList.contains('hook-1')).toBe(true);
+    expect(instance.dom.dropdown.classList.contains('my-panel')).toBe(true);
+    expect(instance.dom.dropdown.classList.contains('hook-1')).toBe(true);
+  });
+
+  it('portals the panel to <body> by default', () => {
+    instance = new Glide(select);
+    expect(instance.dom.dropdown.parentElement).toBe(document.body);
+  });
+
+  it('portal:false keeps the panel inside the root', () => {
+    instance = new Glide(select, { portal: false });
+    expect(instance.dom.root.contains(instance.dom.dropdown)).toBe(true);
+  });
+
+  it('portal:Element appends the panel to that element', () => {
+    const host = document.createElement('div');
+    document.body.appendChild(host);
+    instance = new Glide(select, { portal: host });
+    expect(instance.dom.dropdown.parentElement).toBe(host);
+    instance.destroy();
+    instance = null;
+    host.remove();
+  });
+});
