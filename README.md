@@ -4,6 +4,8 @@ A tiny, dependency-free, accessible select/dropdown component for the web. A mod
 replacement for Select2: ~10.7 KB gzipped, virtualized to handle
 20,000+ options smoothly, and built on plain ES modules — no jQuery, no framework.
 
+**[Live demo →](https://cliqthemes.github.io/glide-dropdown/)**
+
 - 🪶 **Tiny** — core is ~10.7 KB gzipped, zero runtime dependencies
 - ⚡ **Fast** — virtualized option list; renders a bounded DOM window regardless of dataset size
 - ♿ **Accessible** — full ARIA combobox pattern, keyboard-only operable, screen-reader announcements
@@ -70,6 +72,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
+### CDN
+
+Every version published to npm is automatically mirrored on jsDelivr and
+unpkg — nothing to configure, no separate publish step:
+
+```html
+<!-- jsDelivr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@cliqthemes/glide-dropdown/dist/glide.css" />
+<script src="https://cdn.jsdelivr.net/npm/@cliqthemes/glide-dropdown/dist/glide.umd.cjs"></script>
+
+<!-- unpkg -->
+<link rel="stylesheet" href="https://unpkg.com/@cliqthemes/glide-dropdown/dist/glide.css" />
+<script src="https://unpkg.com/@cliqthemes/glide-dropdown/dist/glide.umd.cjs"></script>
+```
+
+Pin an exact version for production (`@cliqthemes/glide-dropdown@0.1.0/...`)
+rather than the unpinned URLs above, which always resolve to latest —
+convenient for docs/demos, riskier for something you don't control the
+timing of.
+
 ## Quick start
 
 ```html
@@ -113,10 +135,10 @@ new Glide('#assignee', {
 });
 ```
 
-See [`examples/index.html`](examples/index.html) for a runnable page covering every
-feature below (single/multi select, groups, creatable tags, custom rendering, async
-loading with infinite scroll, and a 20,000-option virtualization stress test) — run
-`npm run dev` and open it.
+See it live at **[cliqthemes.github.io/glide-dropdown](https://cliqthemes.github.io/glide-dropdown/)**,
+or run it locally from [`examples/index.html`](examples/index.html) (single/multi
+select, groups, creatable tags, custom rendering, async loading with infinite
+scroll, and a 20,000-option virtualization stress test) — `npm run dev` and open it.
 
 ## Data formats
 
