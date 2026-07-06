@@ -443,20 +443,20 @@
     // ---- Copy-paste snippets, one per section above ----
     const SNIPPETS = {
       'field-country': `
-import { Glide } from 'glide-dropdown';
+import { Glide } from '@cliqthemes/glide-dropdown';
 
 const country = new Glide('#country');
 country.on('change', ({ value }) => console.log(value));`.trim(),
 
       'field-skills': `
-import { Glide } from 'glide-dropdown';
-import { clearButton } from 'glide-dropdown/plugins/clearButton';
+import { Glide } from '@cliqthemes/glide-dropdown';
+import { clearButton } from '@cliqthemes/glide-dropdown/plugins/clearButton';
 
 new Glide('#skills', { fuzzy: true, plugins: [clearButton()] });`.trim(),
 
       'field-skills-checkbox': `
-import { checkboxSelection } from 'glide-dropdown/plugins/checkboxSelection';
-import { clearButton } from 'glide-dropdown/plugins/clearButton';
+import { checkboxSelection } from '@cliqthemes/glide-dropdown/plugins/checkboxSelection';
+import { clearButton } from '@cliqthemes/glide-dropdown/plugins/clearButton';
 
 new Glide('#skills-checkbox', {
   fuzzy: true,
@@ -464,17 +464,17 @@ new Glide('#skills-checkbox', {
 });`.trim(),
 
       'field-grouped': `
-import { checkboxSelection } from 'glide-dropdown/plugins/checkboxSelection';
-import { groupSelect } from 'glide-dropdown/plugins/groupSelect';
-import { clearButton } from 'glide-dropdown/plugins/clearButton';
+import { checkboxSelection } from '@cliqthemes/glide-dropdown/plugins/checkboxSelection';
+import { groupSelect } from '@cliqthemes/glide-dropdown/plugins/groupSelect';
+import { clearButton } from '@cliqthemes/glide-dropdown/plugins/clearButton';
 
 new Glide('#grouped', {
   plugins: [checkboxSelection(), groupSelect(), clearButton()],
 });`.trim(),
 
       'field-tags': `
-import { tagCreate } from 'glide-dropdown/plugins/tagCreate';
-import { clearButton } from 'glide-dropdown/plugins/clearButton';
+import { tagCreate } from '@cliqthemes/glide-dropdown/plugins/tagCreate';
+import { clearButton } from '@cliqthemes/glide-dropdown/plugins/clearButton';
 
 new Glide('#tags', {
   placeholder: 'Type and press Enter…',
