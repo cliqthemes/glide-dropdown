@@ -21,4 +21,9 @@
   --glide-group-color: #8e8e93;
   --glide-scrollbar-thumb: #c7c7cc;
   --glide-scrollbar-track: transparent;
+  --glide-chip-bg: #ffffff;
+  --glide-chip-border: #d7d9dc;
+  --glide-chip-selected-bg: #0f172a;
+  --glide-chip-selected-border: #0f172a;
+  --glide-chip-selected-color: #ffffff;
 }

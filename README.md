@@ -176,6 +176,9 @@ new Glide(el, {
 | `searchable` | `boolean` | `true` | Show the search input (ignored — always on — when `load` is set) |
 | `fuzzy` | `boolean` | `false` | Enable subsequence fuzzy matching once exact/startsWith/contains all miss |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | `'auto'` follows `prefers-color-scheme`; dark never applies unless requested |
+| `presentation` | `'dropdown' \| 'chips' \| 'always-open' \| 'accordion' \| 'popup'` | `'dropdown'` | Choose classic overlay, wrapping option chips, persistent list, an in-flow accordion, or a wide responsive popup grid |
+| `showSelectedChips` | `boolean` | `true` | Show selected multi-select values as removable chips in the control. Set `false` for a cleaner always-open list; a searchable input remains available when enabled |
+| `panelLabel` | `string` | — | Optional panel heading; especially useful for popup filters |
 | `className` | `string` | — | Extra class(es) on the root element, for scoping instance-specific CSS |
 | `controlClassName` | `string` | — | Extra class(es) on the control element — an official hook that survives internal re-renders |
 | `dropdownClassName` | `string` | — | Extra class(es) on the dropdown panel. The panel is portaled to `<body>` by default, so instance-scoped CSS can only reach it through this |
@@ -279,8 +282,45 @@ Full variable list: `--glide-bg`, `--glide-border`, `--glide-border-focus`,
 `--glide-tag-color`, `--glide-highlight-bg`, `--glide-highlight-color`,
 `--glide-group-color`, `--glide-control-min-height`, `--glide-font-size`,
 `--glide-scrollbar-thumb`, `--glide-scrollbar-track` (WebKit + `scrollbar-color`,
-both driven by the same pair), `--glide-panel-max-h` (caps the option list's
+both driven by the same pair), and `--glide-panel-max-h` (caps the option list's
 height below the default 280px; the available-viewport clamp still applies).
+
+### Presentation modes
+
+The same data, selection API, keyboard behavior, plugins, and theme variables
+work across all presentations:
+
+```js
+new Glide('#categories', {
+  multiple: true,
+  presentation: 'chips',
+});
+
+new Glide('#facilities', {
+  multiple: true,
+  presentation: 'always-open',
+  showSelectedChips: false,
+  plugins: [checkboxSelection()],
+});
+
+new Glide('#region', { presentation: 'accordion' });
+
+new Glide('#property-type', {
+  presentation: 'popup',
+  panelLabel: 'Property type',
+});
+```
+
+Chips and popup use a responsive static option grid; classic dropdown,
+always-open, and accordion retain virtual scrolling. Useful layout variables
+include `--glide-option-gap`, `--glide-option-radius`, `--glide-chip-bg`,
+`--glide-chip-selected-bg`, `--glide-panel-max-h`, `--glide-popup-width`,
+`--glide-chip-selected-color`, `--glide-chip-radius`,
+`--glide-popup-columns`, and `--glide-popup-padding`.
+
+Accordion selection intentionally leaves the panel open so users can continue
+browsing or make additional choices; it closes only when explicitly toggled,
+with Escape, or by clicking outside.
 
 Animations are CSS-only (a subtle fade/scale on open) and respect
 `prefers-reduced-motion`.

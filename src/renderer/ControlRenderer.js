@@ -9,10 +9,11 @@ import { escapeHtml } from '../utils/escapeHtml.js';
  * value/tags contents are diffed in place on each update.
  */
 export class ControlRenderer {
-  constructor({ multiple, searchable, placeholder, templates, comboboxId, listboxId }) {
+  constructor({ multiple, searchable, placeholder, showSelectedChips = true, templates, comboboxId, listboxId }) {
     this.multiple = multiple;
     this.searchable = searchable;
     this.placeholder = placeholder;
+    this.showSelectedChips = showSelectedChips;
     this.templates = templates;
 
     this.value = h('span', { class: 'glide-value' });
@@ -38,13 +39,18 @@ export class ControlRenderer {
       this.caret,
     ]);
 
+    if (this.multiple && !this.showSelectedChips) {
+      this.control.classList.add('glide-control--selected-chips-hidden');
+      if (!this.searchable) this.control.classList.add('glide-control--hidden');
+    }
+
     if (this.multiple) this.tags.appendChild(h('li', { class: 'glide-tag-input-wrap' }, this.input));
   }
 
   render(selectedItems, { query, isTyping }) {
     if (this.multiple) {
-      this._renderTags(selectedItems);
-      this.input.placeholder = selectedItems.length === 0 ? this.placeholder ?? '' : '';
+      this._renderTags(this.showSelectedChips ? selectedItems : []);
+      this.input.placeholder = !this.showSelectedChips || selectedItems.length === 0 ? this.placeholder ?? '' : '';
     } else {
       const showQuery = isTyping;
       this.value.style.display = showQuery ? 'none' : '';

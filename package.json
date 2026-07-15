@@ -1,6 +1,6 @@
 {
   "name": "@cliqthemes/glide-dropdown",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A tiny, dependency-free, accessible select/dropdown component. A modern replacement for Select2 / Tom Select.",
   "type": "module",
   "publishConfig": {
@@ -36,11 +36,13 @@
   },
   "files": [
     "dist",
-    "types"
+    "types",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/build-extra.mjs",
+    "build": "vite build && node scripts/build-extra.mjs && node scripts/build-demo.mjs",
+    "build:demo": "node scripts/build-demo.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"

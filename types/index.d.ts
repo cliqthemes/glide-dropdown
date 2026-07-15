@@ -71,6 +71,7 @@ export interface GlidePlugin {
 }
 
 export type GlideTheme = 'light' | 'dark' | 'auto';
+export type GlidePresentation = 'dropdown' | 'chips' | 'always-open' | 'accordion' | 'popup';
 
 export interface GlideOptions {
   multiple?: boolean;
@@ -78,6 +79,12 @@ export interface GlideOptions {
   searchable?: boolean;
   fuzzy?: boolean;
   theme?: GlideTheme;
+  /** Visual behavior: classic popup, wrapping chips, persistent list, in-flow accordion, or wide popup grid. */
+  presentation?: GlidePresentation;
+  /** Show selected multi-select values as removable chips above the input/list. Set false for a cleaner always-open list. */
+  showSelectedChips?: boolean;
+  /** Optional heading rendered inside the option panel (especially useful for popup). */
+  panelLabel?: string;
   className?: string;
   /** Extra class(es) on the control element — an official hook that survives internal re-renders. */
   controlClassName?: string;

@@ -12,16 +12,19 @@ const DEFAULT_MAX_HEIGHT = 280;
  * to ListRenderer and control rendering to ControlRenderer.
  */
 export class Renderer {
-  constructor({ anchor, multiple, searchable, placeholder, theme, templates, ids, portal = true, onHoverItem, onSelectItem, onToggleGroup }) {
+  constructor({ anchor, multiple, searchable, placeholder, theme, presentation = 'dropdown', showSelectedChips = true, panelLabel, templates, ids, portal = true, onHoverItem, onSelectItem, onToggleGroup }) {
     this.anchor = anchor;
     this.ids = ids;
     this.theme = theme;
-    this.portal = portal;
+    this.presentation = presentation;
+    this.inline = presentation === 'chips' || presentation === 'always-open' || presentation === 'accordion';
+    this.portal = this.inline ? false : portal;
 
     this.controlRenderer = new ControlRenderer({
       multiple,
       searchable,
       placeholder,
+      showSelectedChips,
       templates,
       comboboxId: ids.combobox,
       listboxId: ids.listbox,
@@ -34,16 +37,19 @@ export class Renderer {
       'aria-atomic': 'true',
     });
 
+    this.panelHeader = panelLabel
+      ? h('div', { class: 'glide-panel-header' }, panelLabel)
+      : null;
     this.messageEl = h('div', { class: 'glide-message', hidden: true });
     this.content = h('div', { class: 'glide-content' });
     this.viewport = h('div', { class: 'glide-viewport' }, this.content);
     this.dropdown = h(
       'div',
-      { class: 'glide-dropdown', id: ids.dropdown, hidden: true, dataset: { theme } },
-      [this.messageEl, this.viewport],
+      { class: 'glide-dropdown', id: ids.dropdown, hidden: true, dataset: { theme, presentation } },
+      [this.panelHeader, this.messageEl, this.viewport].filter(Boolean),
     );
 
-    this.root = h('div', { class: 'glide', dataset: { theme } }, [this.controlRenderer.control, this.statusEl]);
+    this.root = h('div', { class: 'glide', dataset: { theme, presentation } }, [this.controlRenderer.control, this.statusEl]);
 
     this.listRenderer = new ListRenderer({
       viewport: this.viewport,
@@ -54,6 +60,7 @@ export class Renderer {
       onHoverItem,
       onSelectItem,
       onToggleGroup,
+      layout: presentation === 'chips' || presentation === 'popup' ? 'static' : 'virtual',
     });
 
     this.templates = templates;
@@ -74,6 +81,11 @@ export class Renderer {
       this.portal.appendChild(this.dropdown);
     } else {
       document.body.appendChild(this.dropdown);
+    }
+    if (this.inline) this.dropdown.hidden = false;
+    if (this.presentation === 'accordion') {
+      this.dropdown.setAttribute('aria-hidden', 'true');
+      this.dropdown.setAttribute('inert', '');
     }
   }
 
@@ -135,16 +147,28 @@ export class Renderer {
     this.dropdown.hidden = false;
     this.root.classList.add('is-open');
     this.controlRenderer.setExpanded(true, null);
-    this._position();
-    window.addEventListener('scroll', this._reposition, true);
-    window.addEventListener('resize', this._reposition);
+    if (this.presentation === 'accordion') {
+      this.dropdown.removeAttribute('aria-hidden');
+      this.dropdown.removeAttribute('inert');
+    }
+    if (!this.inline) {
+      this._position();
+      window.addEventListener('scroll', this._reposition, true);
+      window.addEventListener('resize', this._reposition);
+    }
   }
 
   close() {
     this.isOpen = false;
-    this.dropdown.hidden = true;
+    this.dropdown.hidden = this.presentation !== 'accordion';
     this.root.classList.remove('is-open');
     this.controlRenderer.setExpanded(false, null);
+    if (this.presentation === 'accordion') {
+      // Keep the element mounted for its closing animation, but make the
+      // collapsed list unavailable to keyboard and assistive-technology users.
+      this.dropdown.setAttribute('aria-hidden', 'true');
+      this.dropdown.setAttribute('inert', '');
+    }
     window.removeEventListener('scroll', this._reposition, true);
     window.removeEventListener('resize', this._reposition);
     if (this._rafId != null) {
@@ -172,18 +196,30 @@ export class Renderer {
     const spaceAbove = rect.top;
     const openUpward = spaceBelow < maxHeight && spaceAbove > spaceBelow;
 
-    this.dropdown.style.left = `${rect.left}px`;
-    this.dropdown.style.width = `${rect.width}px`;
+    const popup = this.presentation === 'popup';
+    const popupVar = parseFloat(getComputedStyle(this.dropdown).getPropertyValue('--glide-popup-width'));
+    const desiredWidth = popup ? (Number.isFinite(popupVar) && popupVar > 0 ? popupVar : 720) : rect.width;
+    const width = Math.min(desiredWidth, window.innerWidth - 24);
+    const left = popup
+      ? Math.max(12, Math.min(window.innerWidth - width - 12, rect.left + rect.width / 2 - width / 2))
+      : rect.left;
+    const panelGap = popup ? 12 : 0;
+
+    this.dropdown.style.left = `${left}px`;
+    this.dropdown.style.width = `${width}px`;
+    if (popup) {
+      this.dropdown.style.setProperty('--glide-popup-anchor-x', `${Math.max(18, Math.min(width - 18, rect.left + rect.width / 2 - left))}px`);
+    }
     this.viewport.style.maxHeight = `${Math.min(maxHeight, Math.max(120, (openUpward ? spaceAbove : spaceBelow) - 12))}px`;
 
     if (openUpward) {
       this.dropdown.style.top = 'auto';
-      this.dropdown.style.bottom = `${window.innerHeight - rect.top}px`;
+      this.dropdown.style.bottom = `${window.innerHeight - rect.top + panelGap}px`;
       this.dropdown.classList.add('is-flipped');
       this.root.classList.add('is-flipped');
     } else {
       this.dropdown.style.bottom = 'auto';
-      this.dropdown.style.top = `${rect.bottom}px`;
+      this.dropdown.style.top = `${rect.bottom + panelGap}px`;
       this.dropdown.classList.remove('is-flipped');
       this.root.classList.remove('is-flipped');
     }

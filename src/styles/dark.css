@@ -25,6 +25,11 @@
   --glide-group-color: #8e959c;
   --glide-scrollbar-thumb: #4a4f54;
   --glide-scrollbar-track: transparent;
+  --glide-chip-bg: #23262a;
+  --glide-chip-border: #383c40;
+  --glide-chip-selected-bg: #33465a;
+  --glide-chip-selected-border: #a8bece;
+  --glide-chip-selected-color: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +50,11 @@
     --glide-highlight-color: #ffe28a;
     --glide-group-color: #8e959c;
     --glide-scrollbar-thumb: #4a4f54;
-  --glide-scrollbar-track: transparent;
+    --glide-scrollbar-track: transparent;
+    --glide-chip-bg: #23262a;
+    --glide-chip-border: #383c40;
+    --glide-chip-selected-bg: #33465a;
+    --glide-chip-selected-border: #a8bece;
+    --glide-chip-selected-color: #ffffff;
   }
 }

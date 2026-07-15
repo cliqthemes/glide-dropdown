@@ -21,6 +21,7 @@ export class ListRenderer {
     onHoverItem,
     onSelectItem,
     onToggleGroup,
+    layout = 'virtual',
   }) {
     this.rowHeight = rowHeight;
     this.groupRowHeight = groupRowHeight;
@@ -29,6 +30,8 @@ export class ListRenderer {
     this.onHoverItem = onHoverItem;
     this.onSelectItem = onSelectItem;
     this.onToggleGroup = onToggleGroup;
+    this.layout = layout;
+    this.content = content;
 
     this.rows = [];
     this.activeId = null;
@@ -38,12 +41,15 @@ export class ListRenderer {
     setAttr(this.listbox, 'role', 'listbox');
     setAttr(this.listbox, 'id', listboxId);
 
-    this.virtualList = new VirtualList({
-      viewport,
-      content,
-      rowHeight,
-      renderRow: (index, el) => this._renderRow(index, el),
-    });
+    this.viewport = viewport;
+    this.virtualList = layout === 'virtual'
+      ? new VirtualList({
+          viewport,
+          content,
+          rowHeight,
+          renderRow: (index, el) => this._renderRow(index, el),
+        })
+      : null;
 
     this._onClick = (event) => this._handleClick(event);
     this._onMouseMove = (event) => this._handleMouseMove(event);
@@ -56,19 +62,25 @@ export class ListRenderer {
     this.activeId = activeId;
     this.selectedSet = selectedSet;
     this.multiple = multiple;
-    this.virtualList.setCount(rows.length, (index) =>
-      rows[index].kind === 'group' ? this.groupRowHeight : this.rowHeight,
-    );
+    if (this.virtualList) {
+      this.virtualList.setCount(rows.length, (index) =>
+        rows[index].kind === 'group' ? this.groupRowHeight : this.rowHeight,
+      );
+    } else {
+      this._renderStatic();
+    }
   }
 
   setActive(activeId) {
     this.activeId = activeId;
-    this.virtualList.update();
+    if (this.virtualList) this.virtualList.update();
+    else this._renderStatic();
   }
 
   setSelected(selectedSet) {
     this.selectedSet = selectedSet;
-    this.virtualList.update();
+    if (this.virtualList) this.virtualList.update();
+    else this._renderStatic();
   }
 
   indexOfItem(itemId) {
@@ -77,11 +89,24 @@ export class ListRenderer {
 
   scrollToActive(align) {
     const index = this.indexOfItem(this.activeId);
-    if (index !== -1) this.virtualList.scrollToIndex(index, align);
+    if (index === -1) return;
+    if (this.virtualList) this.virtualList.scrollToIndex(index, align);
+    else [...this.content.querySelectorAll('[data-item-id]')]
+      .find((el) => el.dataset.itemId === this.activeId)
+      ?.scrollIntoView?.({ block: 'nearest' });
   }
 
   isNearBottom(threshold) {
-    return this.virtualList.isNearBottom(threshold);
+    if (this.virtualList) return this.virtualList.isNearBottom(threshold);
+    return this.viewport.scrollHeight - this.viewport.scrollTop - this.viewport.clientHeight <= threshold;
+  }
+
+  _renderStatic() {
+    empty(this.content);
+    this.rows.forEach((row, index) => {
+      const el = this._renderRow(index, null);
+      if (el) this.content.appendChild(el);
+    });
   }
 
   _renderRow(index, el) {
@@ -161,7 +186,7 @@ export class ListRenderer {
   destroy() {
     this.listbox.removeEventListener('click', this._onClick);
     this.listbox.removeEventListener('mousemove', this._onMouseMove);
-    this.virtualList.destroy();
+    this.virtualList?.destroy();
     empty(this.listbox);
   }
 }

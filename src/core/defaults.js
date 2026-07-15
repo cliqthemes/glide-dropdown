@@ -3,6 +3,15 @@ export const defaultOptions = {
   disabled: false,
   searchable: true,
   theme: 'light',
+  // Visual behavior. `dropdown` preserves the classic portaled combobox;
+  // chips and always-open are persistent, accordion expands in document flow,
+  // and popup opens a wider, responsive option grid.
+  presentation: 'dropdown',
+  // Render selected multi-select values as removable chips in the control.
+  // Set false for a cleaner persistent list (the search input remains when
+  // searchable is enabled).
+  showSelectedChips: true,
+  panelLabel: undefined,
   fuzzy: false,
   className: undefined,
   // Instance classes for the two elements className can't reach: the control

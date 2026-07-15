@@ -11,6 +11,7 @@ import { defaultOptions } from './defaults.js';
 
 const PAGE_STEP = 8;
 const TYPEAHEAD_RESET_MS = 500;
+const PRESENTATIONS = new Set(['dropdown', 'chips', 'always-open', 'accordion', 'popup']);
 
 export class Glide {
   constructor(target, userOptions = {}) {
@@ -18,6 +19,11 @@ export class Glide {
     if (!this.el) throw new Error('Glide: target element not found');
 
     this.options = { ...defaultOptions, ...userOptions };
+    if (!PRESENTATIONS.has(this.options.presentation)) {
+      throw new Error(`Glide: unknown presentation "${this.options.presentation}"`);
+    }
+    this.presentation = this.options.presentation;
+    this.persistent = this.presentation === 'chips' || this.presentation === 'always-open';
     this.templates = { ...defaultTemplates, ...userOptions.templates };
     this.events = new EventEmitter();
     this._destroyed = false;
@@ -63,6 +69,9 @@ export class Glide {
       searchable: this.remote ? true : this.options.searchable,
       placeholder: this.options.placeholder,
       theme: this.options.theme,
+      presentation: this.presentation,
+      showSelectedChips: this.presentation !== 'always-open' || this.options.showSelectedChips,
+      panelLabel: this.options.panelLabel,
       templates: this.templates,
       ids: this.ids,
       portal: this.options.portal,
@@ -129,6 +138,8 @@ export class Glide {
     if (this.remote && this.options.loadOnInit !== false) {
       this.asyncLoader.request('', { page: 1, append: false });
     }
+
+    if (this.persistent) this.open();
   }
 
   // ---------------------------------------------------------------- setup
@@ -226,6 +237,7 @@ export class Glide {
     });
 
     this._onDocumentPointerDown = (event) => {
+      if (this.persistent) return;
       if (!this.store.get('open')) return;
       if (this.dom.root.contains(event.target) || this.dom.dropdown.contains(event.target)) return;
       this.close();
@@ -368,6 +380,11 @@ export class Glide {
   }
 
   _handleRowClick(itemId) {
+    if (this.presentation === 'chips' && this.selectedSet.has(itemId)) {
+      this.deselect(itemId);
+      this.setActive(itemId);
+      return;
+    }
     if (this.multiple) {
       if (this.selectedSet.has(itemId)) this.deselect(itemId);
       else this.select(itemId);
@@ -430,7 +447,7 @@ export class Glide {
     this.events.emit('select', { value: item.value, item });
     this._emitChange();
     if (this.multiple) this._clearQuery();
-    else this.close();
+    else if (this.presentation !== 'accordion') this.close();
   }
 
   deselect(value) {
@@ -544,7 +561,10 @@ export class Glide {
   open() {
     if (this.store.get('disabled') || this.store.get('open')) return;
     let activeId = this.store.get('activeId');
-    if (!activeId) {
+    // Persistent presentations are already visible. Do not paint their first
+    // option as keyboard-active before the user has interacted with the list;
+    // ArrowDown/ArrowUp will establish an active option when needed.
+    if (!activeId && !this.persistent) {
       const rows = this._computeRows(this.store.state);
       const index = firstSelectableIndex(rows);
       activeId = index !== -1 ? rows[index].item.id : null;
@@ -556,6 +576,7 @@ export class Glide {
   }
 
   close() {
+    if (this.persistent) return;
     if (!this.store.get('open')) return;
     this.store.setStateSync({ open: false, isTyping: false, query: '', activeId: null });
     this.dom.input.value = '';

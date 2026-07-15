@@ -42,6 +42,46 @@
     .playground-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
     .playground-grid pre { height: 220px; overflow-y: auto; margin: 0; }
     .constrained { max-width: 280px; }
+    .mode-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
+    .demo-card { padding: 20px; border: 1px solid #e6e8ec; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px rgba(23, 36, 50, .05); }
+    .demo-card h3 { margin: 0 0 5px; font-size: 17px; }
+    .demo-card > p { margin: 0 0 16px; color: #6b7280; font-size: 13px; }
+    .demo-card.is-dark { background: #15181c; border-color: #2d333a; color: #f1f5f9; }
+    .theme-ocean {
+      --glide-bg: #f7fbff;
+      --glide-border: #b9d8ee;
+      --glide-border-focus: #1683c7;
+      --glide-color: #083152;
+      --glide-hover: #e5f4ff;
+      --glide-active: #caeaff;
+      --glide-active-color: #075985;
+      --glide-chip-bg: #fff;
+      --glide-chip-border: #b9d8ee;
+      --glide-chip-selected-bg: #dff2ff;
+      --glide-chip-selected-border: #1683c7;
+      --glide-chip-selected-color: #075985;
+      --glide-option-radius: 12px;
+      --glide-radius: 12px;
+      --glide-focus-ring: 0 0 0 3px rgba(22, 131, 199, .16);
+    }
+    .theme-sunset {
+      --glide-bg: #fffaf5;
+      --glide-border: #f0cdb5;
+      --glide-border-focus: #e6632f;
+      --glide-color: #532916;
+      --glide-hover: #fff0e5;
+      --glide-active: #ffe0cc;
+      --glide-active-color: #a43b16;
+      --glide-chip-bg: #fff;
+      --glide-chip-border: #efd6c5;
+      --glide-chip-selected-bg: #ffe4d2;
+      --glide-chip-selected-border: #e6632f;
+      --glide-chip-selected-color: #a43b16;
+      --glide-option-radius: 10px;
+      --glide-radius: 10px;
+      --glide-popup-radius: 18px;
+      --glide-shadow: 0 24px 60px rgba(93, 42, 20, .18);
+    }
 
     .snippet-wrap { position: relative; margin-top: 10px; }
     .snippet-wrap pre.snippet {
@@ -215,9 +255,73 @@
     </div>
   </div>
 
+  <h2>Presentation modes &amp; themes</h2>
+  <p class="hint">One selection engine, five presentations. These examples use light, dark, and variable-only custom themes.</p>
+  <div class="mode-grid">
+    <section class="demo-card" id="demo-chips-multi">
+      <h3>Chips · Light</h3>
+      <p>Direct, always-visible choices: click once to select and again to deselect.</p>
+      <select id="mode-chips" multiple>
+        <option value="all" selected>All Categories</option><option value="pharmacy">Pharmacy</option>
+        <option value="support">Support</option><option value="billing">Billing</option><option value="flagship">Flagship</option>
+        <option value="boutique">Boutique</option><option value="outlet">Outlet</option><option value="hotel">Hotel</option>
+      </select>
+    </section>
+    <section class="demo-card" id="demo-chips-single">
+      <h3>Single-select chips · Light</h3>
+      <p>Only one chip is selected at a time; click the selected chip again to clear it.</p>
+      <select id="mode-chips-single">
+        <option value="standard" selected>Standard</option><option value="express">Express</option>
+        <option value="premium">Premium</option><option value="enterprise">Enterprise</option>
+      </select>
+    </section>
+    <section class="demo-card is-dark" id="demo-always-open">
+      <h3>Always open · Dark</h3>
+      <p>Uses the built-in dark theme and hides selected chips for a cleaner persistent checkbox list.</p>
+      <select id="mode-open" multiple>
+        <option value="parking">Parking</option><option value="wifi" selected>Wi-Fi</option>
+        <option value="accessible" selected>Accessible</option><option value="outdoor">Outdoor seating</option>
+      </select>
+    </section>
+    <section class="demo-card" id="demo-accordion">
+      <h3>Accordion · Ocean</h3>
+      <p>Uses a custom CSS-variable Ocean theme. The panel stays open after a selection.</p>
+      <select id="mode-accordion">
+        <option value="">Choose a region</option><option value="north">North</option>
+        <option value="south">South</option><option value="east">East</option><option value="west">West</option>
+      </select>
+    </section>
+    <section class="demo-card" id="demo-popup">
+      <h3>Popup grid · Sunset</h3>
+      <p>Uses a custom CSS-variable Sunset theme for a wide, anchored filter panel.</p>
+      <select id="mode-popup">
+        <option value="">Category</option><option value="residential">Residential</option><option value="rural">Rural</option>
+        <option value="commercial">Commercial</option><option value="business">Business</option><option value="land">Land</option>
+      </select>
+    </section>
+  </div>
+
   <script type="module">
     import { Glide } from '/src/index.js';
     import { clearButton, checkboxSelection, groupSelect, tagCreate } from '/src/plugins/index.js';
+
+    new Glide('#mode-chips', { presentation: 'chips', searchable: false });
+    new Glide('#mode-chips-single', { presentation: 'chips', searchable: false });
+    new Glide('#mode-open', {
+      presentation: 'always-open',
+      theme: 'dark',
+      searchable: false,
+      showSelectedChips: false,
+      plugins: [checkboxSelection()],
+    });
+    new Glide('#mode-accordion', { presentation: 'accordion', searchable: false, className: 'theme-ocean', dropdownClassName: 'theme-ocean' });
+    new Glide('#mode-popup', {
+      presentation: 'popup',
+      searchable: false,
+      panelLabel: 'Category',
+      className: 'theme-sunset',
+      dropdownClassName: 'theme-sunset',
+    });
 
     function escapeForDemo(s) {
       return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -442,6 +546,82 @@
 
     // ---- Copy-paste snippets, one per section above ----
     const SNIPPETS = {
+      'demo-chips-multi': `
+import { Glide } from '@cliqthemes/glide-dropdown';
+
+new Glide('#categories', {
+  presentation: 'chips',
+  multiple: true,
+  searchable: false,
+});`.trim(),
+
+      'demo-chips-single': `
+import { Glide } from '@cliqthemes/glide-dropdown';
+
+new Glide('#service-level', {
+  presentation: 'chips',
+  searchable: false,
+});`.trim(),
+
+      'demo-always-open': `
+import { Glide } from '@cliqthemes/glide-dropdown';
+import { checkboxSelection } from '@cliqthemes/glide-dropdown/plugins/checkboxSelection';
+
+new Glide('#facilities', {
+  presentation: 'always-open',
+  theme: 'dark', // Built-in theme
+  searchable: false,
+  showSelectedChips: false,
+  plugins: [checkboxSelection()],
+});`.trim(),
+
+      'demo-accordion': `
+import { Glide } from '@cliqthemes/glide-dropdown';
+
+new Glide('#region', {
+  presentation: 'accordion',
+  searchable: false,
+  className: 'theme-ocean',
+  dropdownClassName: 'theme-ocean',
+});
+
+/* Custom theme: apply to both root and inline/portaled panel. */
+.theme-ocean {
+  --glide-bg: #f7fbff;
+  --glide-border: #b9d8ee;
+  --glide-border-focus: #1683c7;
+  --glide-color: #083152;
+  --glide-hover: #e5f4ff;
+  --glide-chip-selected-bg: #dff2ff;
+  --glide-chip-selected-border: #1683c7;
+  --glide-chip-selected-color: #075985;
+  --glide-radius: 12px;
+}`.trim(),
+
+      'demo-popup': `
+import { Glide } from '@cliqthemes/glide-dropdown';
+
+new Glide('#property-type', {
+  presentation: 'popup',
+  searchable: false,
+  panelLabel: 'Category',
+  className: 'theme-sunset',
+  dropdownClassName: 'theme-sunset',
+});
+
+/* Custom theme: dropdownClassName also themes the portaled popup. */
+.theme-sunset {
+  --glide-bg: #fffaf5;
+  --glide-border: #f0cdb5;
+  --glide-border-focus: #e6632f;
+  --glide-color: #532916;
+  --glide-hover: #fff0e5;
+  --glide-chip-selected-bg: #ffe4d2;
+  --glide-chip-selected-border: #e6632f;
+  --glide-popup-radius: 18px;
+  --glide-shadow: 0 24px 60px rgba(93, 42, 20, .18);
+}`.trim(),
+
       'field-country': `
 import { Glide } from '@cliqthemes/glide-dropdown';
 
