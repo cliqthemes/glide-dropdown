@@ -83,6 +83,8 @@ export interface GlideOptions {
   presentation?: GlidePresentation;
   /** Show selected multi-select values as removable chips above the input/list. Set false for a cleaner always-open list. */
   showSelectedChips?: boolean;
+  /** Fixed text shown in the control instead of the current selection (useful for popup triggers and accordion headings). */
+  staticControlLabel?: string;
   /** Optional heading rendered inside the option panel (especially useful for popup). */
   panelLabel?: string;
   className?: string;

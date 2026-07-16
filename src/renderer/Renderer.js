@@ -12,7 +12,7 @@ const DEFAULT_MAX_HEIGHT = 280;
  * to ListRenderer and control rendering to ControlRenderer.
  */
 export class Renderer {
-  constructor({ anchor, multiple, searchable, placeholder, theme, presentation = 'dropdown', showSelectedChips = true, panelLabel, templates, ids, portal = true, onHoverItem, onSelectItem, onToggleGroup }) {
+  constructor({ anchor, multiple, searchable, placeholder, theme, presentation = 'dropdown', showSelectedChips = true, staticControlLabel, panelLabel, templates, ids, portal = true, onHoverItem, onSelectItem, onToggleGroup }) {
     this.anchor = anchor;
     this.ids = ids;
     this.theme = theme;
@@ -25,6 +25,7 @@ export class Renderer {
       searchable,
       placeholder,
       showSelectedChips,
+      staticControlLabel,
       templates,
       comboboxId: ids.combobox,
       listboxId: ids.listbox,

@@ -71,6 +71,7 @@ export class Glide {
       theme: this.options.theme,
       presentation: this.presentation,
       showSelectedChips: this.presentation !== 'always-open' || this.options.showSelectedChips,
+      staticControlLabel: this.options.staticControlLabel,
       panelLabel: this.options.panelLabel,
       templates: this.templates,
       ids: this.ids,

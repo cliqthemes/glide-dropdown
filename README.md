@@ -178,6 +178,7 @@ new Glide(el, {
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'light'` | `'auto'` follows `prefers-color-scheme`; dark never applies unless requested |
 | `presentation` | `'dropdown' \| 'chips' \| 'always-open' \| 'accordion' \| 'popup'` | `'dropdown'` | Choose classic overlay, wrapping option chips, persistent list, an in-flow accordion, or a wide responsive popup grid |
 | `showSelectedChips` | `boolean` | `true` | Show selected multi-select values as removable chips in the control. Set `false` for a cleaner always-open list; a searchable input remains available when enabled |
+| `staticControlLabel` | `string` | — | Keep the control text fixed instead of replacing it with selected values; useful for popup filter triggers and accordion headings |
 | `panelLabel` | `string` | — | Optional panel heading; especially useful for popup filters |
 | `className` | `string` | — | Extra class(es) on the root element, for scoping instance-specific CSS |
 | `controlClassName` | `string` | — | Extra class(es) on the control element — an official hook that survives internal re-renders |

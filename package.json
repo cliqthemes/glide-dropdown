@@ -1,6 +1,6 @@
 {
   "name": "@cliqthemes/glide-dropdown",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A tiny, dependency-free, accessible select/dropdown component. A modern replacement for Select2 / Tom Select.",
   "type": "module",
   "publishConfig": {
@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/cliqthemes/glide-dropdown/issues"
   },
-  "author": "CliqThemes",
+  "author": "cliqthemes <hello@cliqthemes.com>",
   "main": "./dist/glide.umd.cjs",
   "module": "./dist/glide.js",
   "types": "./types/index.d.ts",

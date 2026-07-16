@@ -129,6 +129,21 @@ describe('presentation modes', () => {
     expect(instance.dom.root.classList.contains('is-open')).toBe(true);
   });
 
+  it.each([false, true])('can keep an accordion heading static after selection (multiple: %s)', async (multiple) => {
+    instance = new Glide(mount(multiple), {
+      presentation: 'accordion',
+      searchable: false,
+      staticControlLabel: 'Amenities',
+    });
+
+    instance.select('b');
+    await Promise.resolve();
+
+    expect(instance.dom.control.querySelector('.glide-value')?.textContent).toBe('Amenities');
+    expect(instance.dom.control.querySelector('.glide-tag')).toBeNull();
+    expect(instance.getValue()).toEqual(multiple ? ['b'] : 'b');
+  });
+
   it('renders popup as a portaled grid with an optional panel heading', () => {
     instance = new Glide(mount(), {
       presentation: 'popup',
@@ -143,5 +158,20 @@ describe('presentation modes', () => {
     expect(instance.dom.dropdown.hidden).toBe(false);
     expect(instance.dom.dropdown.style.width).not.toBe('');
     expect(instance.dom.dropdown.style.getPropertyValue('--glide-popup-anchor-x')).not.toBe('');
+  });
+
+  it.each([false, true])('can keep a popup trigger label static after selection (multiple: %s)', async (multiple) => {
+    instance = new Glide(mount(multiple), {
+      presentation: 'popup',
+      searchable: false,
+      staticControlLabel: 'Beds',
+    });
+
+    instance.select('b');
+    await Promise.resolve();
+
+    expect(instance.dom.control.querySelector('.glide-value')?.textContent).toBe('Beds');
+    expect(instance.dom.control.querySelector('.glide-tag')).toBeNull();
+    expect(instance.getValue()).toEqual(multiple ? ['b'] : 'b');
   });
 });

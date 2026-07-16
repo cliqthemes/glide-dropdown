@@ -9,11 +9,13 @@ import { escapeHtml } from '../utils/escapeHtml.js';
  * value/tags contents are diffed in place on each update.
  */
 export class ControlRenderer {
-  constructor({ multiple, searchable, placeholder, showSelectedChips = true, templates, comboboxId, listboxId }) {
+  constructor({ multiple, searchable, placeholder, showSelectedChips = true, staticControlLabel, templates, comboboxId, listboxId }) {
     this.multiple = multiple;
     this.searchable = searchable;
     this.placeholder = placeholder;
     this.showSelectedChips = showSelectedChips;
+    this.staticControlLabel = staticControlLabel == null ? '' : String(staticControlLabel);
+    this.usesTags = multiple && this.staticControlLabel === '';
     this.templates = templates;
 
     this.value = h('span', { class: 'glide-value' });
@@ -34,21 +36,21 @@ export class ControlRenderer {
     this.caret = h('span', { class: 'glide-caret', 'aria-hidden': 'true' });
 
     this.control = h('div', { class: 'glide-control' }, [
-      this.multiple ? this.tags : this.value,
+      this.usesTags ? this.tags : this.value,
       this.input,
       this.caret,
     ]);
 
-    if (this.multiple && !this.showSelectedChips) {
+    if (this.usesTags && !this.showSelectedChips) {
       this.control.classList.add('glide-control--selected-chips-hidden');
       if (!this.searchable) this.control.classList.add('glide-control--hidden');
     }
 
-    if (this.multiple) this.tags.appendChild(h('li', { class: 'glide-tag-input-wrap' }, this.input));
+    if (this.usesTags) this.tags.appendChild(h('li', { class: 'glide-tag-input-wrap' }, this.input));
   }
 
   render(selectedItems, { query, isTyping }) {
-    if (this.multiple) {
+    if (this.usesTags) {
       this._renderTags(this.showSelectedChips ? selectedItems : []);
       this.input.placeholder = !this.showSelectedChips || selectedItems.length === 0 ? this.placeholder ?? '' : '';
     } else {
@@ -61,8 +63,10 @@ export class ControlRenderer {
       this.input.classList.toggle('glide-input--collapsed', !showQuery);
       if (!showQuery) {
         const item = selectedItems[0];
-        this.value.innerHTML = item ? this.templates.value(item) : escapeHtml(this.placeholder ?? '');
-        this.value.classList.toggle('is-placeholder', !item);
+        this.value.innerHTML = this.staticControlLabel !== ''
+          ? escapeHtml(this.staticControlLabel)
+          : (item ? this.templates.value(item) : escapeHtml(this.placeholder ?? ''));
+        this.value.classList.toggle('is-placeholder', this.staticControlLabel === '' && !item);
       }
     }
   }

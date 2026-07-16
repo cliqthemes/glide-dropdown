@@ -528,7 +528,6 @@
   min-height: 44px;
   padding: var(--glide-chip-padding);
   background: var(--glide-chip-bg);
-  border: 1px solid var(--glide-chip-border);
   border-radius: var(--glide-option-radius);
   text-align: center;
 }

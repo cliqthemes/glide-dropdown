@@ -11,6 +11,10 @@ export const defaultOptions = {
   // Set false for a cleaner persistent list (the search input remains when
   // searchable is enabled).
   showSelectedChips: true,
+  // Keep the control trigger text fixed instead of replacing it with the
+  // current selection. Useful for filter-bar popups (e.g. a permanent "Beds"
+  // trigger while the selected 2+/3+/4+ state remains inside the panel).
+  staticControlLabel: undefined,
   panelLabel: undefined,
   fuzzy: false,
   className: undefined,

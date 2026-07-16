@@ -2,6 +2,16 @@
 
 All notable changes to Glide Dropdown are documented in this file.
 
+## [0.4.0] - 2026-07-16
+
+### Added
+
+- Added `staticControlLabel` for popup/filter triggers and accordion headings whose visible label must not change with selection.
+
+### Changed
+
+- Removed the built-in border from chip and popup-grid options so consumers fully control that presentation.
+
 ## [0.3.0] - 2026-07-15
 
 ### Added
@@ -32,4 +42,3 @@ All notable changes to Glide Dropdown are documented in this file.
 ## [0.2.0] - 2026-07-14
 
 - Added portal control, stable instance class hooks, value-preserving `setOptions`, and scrollbar theming.
-
